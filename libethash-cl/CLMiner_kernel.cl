@@ -32,19 +32,19 @@ __constant const uint32_t keccakf_rndc[24] = {0x00000001, 0x00008082, 0x0000808a
     0x80008081, 0x00008009, 0x0000008a, 0x00000088, 0x80008009, 0x8000000a, 0x8000808b, 0x0000008b, 0x00008089,
     0x00008003, 0x00008002, 0x00000080, 0x0000800a, 0x8000000a, 0x80008081, 0x00008080, 0x80000001, 0x80008008};
 
-__constant const uint32_t evrmore_rndc[15] = {
-        0x00000045, //E
+__constant const uint32_t ravencoin_rndc[15] = {
+        0x00000072, //R
+        0x00000041, //A
         0x00000056, //V
-        0x00000052, //R
-        0x0000004D, //M
-        0x0000004F, //O
-        0x00000052, //R
         0x00000045, //E
-        0x0000002D, //-
-        0x00000050, //P
-        0x00000052, //R
+        0x0000004E, //N
+        0x00000043, //C
         0x0000004F, //O
-        0x00000047, //G
+        0x00000049, //I
+        0x0000004E, //N
+        0x0000004B, //K
+        0x00000041, //A
+        0x00000057, //W
         0x00000050, //P
         0x0000004F, //O
         0x00000057, //W
@@ -215,9 +215,9 @@ ethash_search(__global struct SearchResults* restrict g_output, __constant hash3
         state[9] = nonce >> 32;
 //        state[10] = 0x00000001;
 //        state[18] = 0x80008081;
-        // 3rd apply evrmore input constraints
+        // 3rd apply ravencoin input constraints
         for (int i = 10; i < 25; i++)
-            state[i] = evrmore_rndc[i-10];
+            state[i] = ravencoin_rndc[i-10];
 
         // Run intial keccak round
         keccak_f800(state);
@@ -283,9 +283,9 @@ ethash_search(__global struct SearchResults* restrict g_output, __constant hash3
 
 //        state[17] = 0x00000001;
 //        state[24] = 0x80008081;
-        // 3rd apply evrmore input constraints
+        // 3rd apply ravencoin input constraints
         for (int i = 16; i < 25; i++)
-            state[i] = evrmore_rndc[i - 16];
+            state[i] = ravencoin_rndc[i - 16];
 
         // Run keccak loop
         keccak_f800(state);

@@ -423,19 +423,19 @@ static mix_t init_mix(uint64_t seed)
     return mix;
 }
 
-static const uint32_t evrmore_kawpow[15] = {
-        0x00000045, //E
+static const uint32_t ravencoin_kawpow[15] = {
+        0x00000072, //R
+        0x00000041, //A
         0x00000056, //V
-        0x00000052, //R
-        0x0000004D, //M
-        0x0000004F, //O
-        0x00000052, //R
         0x00000045, //E
-        0x0000002D, //-
-        0x00000050, //P
-        0x00000052, //R
+        0x0000004E, //N
+        0x00000043, //C
         0x0000004F, //O
-        0x00000047, //G
+        0x00000049, //I
+        0x0000004E, //N
+        0x0000004B, //K
+        0x00000041, //A
+        0x00000057, //W
         0x00000050, //P
         0x0000004F, //O
         0x00000057, //W
@@ -453,9 +453,9 @@ ethash::hash256 hash_seed(const ethash::hash256& header_hash, uint64_t nonce) no
     std::memcpy(&state[8], &nonce, sizeof(uint64_t));
 //    state[10] = 0x00000001;
 //    state[18] = 0x80008081;
-      // 3rd apply evrmore input constraints
+      // 3rd apply ravencoin input constraints
       for (int i = 10; i < 25; i++)
-          state[i] = evrmore_kawpow[i-10];
+          state[i] = ravencoin_kawpow[i-10];
 
     ethash::keccakf800(state);
 
@@ -518,9 +518,9 @@ ethash::hash256 hash_final(const ethash::hash256& input_hash, const ethash::hash
     std::memcpy(&state[8], mix_hash.bytes, sizeof(ethash::hash256));
     //state[17] = 0x00000001;
     //state[24] = 0x80008081;
-    // 3rd apply evrmore input constraints
+    // 3rd apply ravencoin input constraints
     for (int i = 16; i < 25; i++)
-        state[i] = evrmore_kawpow[i - 16];
+        state[i] = ravencoin_kawpow[i - 16];
     ethash::keccakf800(state);
     ethash::hash256 output{};
     std::memcpy(output.bytes, &state[0], sizeof(ethash::hash256));

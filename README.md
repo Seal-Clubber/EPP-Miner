@@ -1,118 +1,117 @@
-# evrprogpowminer (ethminer fork with ProgPoW implementation)
+# kawpowminer (ethminer fork with ProgPoW implementation)
 
-Evrprogpowminer is a fork of Ravencoin's [kawpowminer ](https://github.com/RavenCommunity/kawpowminer). Like kawpowminer, it is a derivative of Ethash enhanced with [Programmable Proof of Work](https://github.com/ifdefelse/progpow) for ASIC and FPGA resistance.
+Kawpowminer is a derivative of Ethash enhanced with [Programmable Proof of Work](https://github.com/ifdefelse/progpow) for ASIC and FPGA resistance.
 
-Compared to kawpowminer, evrprogpowminer has the following differences:
-* Starting DAG size at block #1 is 3GigaBytes
-* EPOCH duration is 12000 blocks
-* evrprogpowminer supports direct solo mining to evrmored/evrmore-qt without needing a stratum proxy
-* the random starting seeds are slightly different for uniqueness
-* improved detection of nVidia GPU memory size
+> kawpowpow miner with OpenCL, CUDA, CPU and stratum support
 
-AMD GPU cards are not currently properly supported. We hope to fix that in a future release.
+AMD GPU cards are not currently properly supported.
 
-You do not need this software for Evrmore testnet. Testnet uses sha256 cpu mining (use the "setgenerate on" command in your node)
-Evrprogpowminer is for use only on Evrmore mainnet. 
+Remember that you need to have CUDA installed on your system in order for kawpowminer to work. Get it from nVidia.
 
-====
-
-A typical use of evrprogpowminer with a pool might look like:
-    evrprogpowminer.exe -U -P stratum+tcp://ESDwJs2FX5zYoVnLQ7YuLZhmnsAcpKqMiq.worker@minersite.com:minerport
-
-A typical use of evrprogpowminer with a local stratum solo-mining proxy might look like:
-    evrprogpowminer.exe -U -P stratum+tcp://ESDwJs2FX5zYoVnLQ7YuLZhmnsAcpKqMiq.worker@127.0.0.1:3333
-
-A typical use of evrprogpowminer to solo mine direct to evrmored/evrmore-qt might look like:
-    evrprogpowminer.exe -U -P http://mynodeusername:mynodepassword@127.0.0.1:8819 (specify miningaddress="youraddress" in evrmore.conf)
-
-====
-
-Remember that you need to have CUDA installed on your system in order for evrprogpowminer to work. Get it from nVidia.
-
-Also, if you are solo mining direct to evrmored or evrmore-qt, before launching evrprogpowminer, make sure that:
-    * the node is fully syncd
-    * the node is listening on the RPC port (8819 for mainnet)
-    * the node has miningaddress="youraddress" set in the evrmore.conf file
-    * the node has rpcuser and rpcpassword set in the evrmore.conf file.
-
-
-===============
-
-> evrprogpowpow miner with OpenCL, CUDA and stratum support
-
-**evrprogpowminer** is an ProgPoW GPU mining worker: with evrprogpowminer you can mine Evrmore, which relies on an ProgPoW-based Proof of Work thus including Ethereum ProgPoW and others. This is the actively maintained version of evrprogpowminer. It originates from the [ethminer](https://github.com/ethereum-mining/ethminer) project. Check the original [ProgPoW](https://github.com/ifdefelse/progpow) implementation and [EIP-1057](https://eips.ethereum.org/EIPS/eip-1057) for specification.
+**kawpowminer** is an ProgPoW GPU mining worker: with kawpowminer you can mine Ravencoin, which relies on an ProgPoW-based Proof of Work thus including Ethereum ProgPoW and others. This is the actively maintained version of kawpowminer. It originates from the [ethminer](https://github.com/ethereum-mining/ethminer) project. Check the original [ProgPoW](https://github.com/ifdefelse/progpow) implementation and [EIP-1057](https://eips.ethereum.org/EIPS/eip-1057) for specification.
 
 ## Features
 
-* First commercial ProgPOW Evrmore miner software for miners.
+* First commercial ProgPOW Raven miner software for miners.
 * OpenCL mining
 * Nvidia CUDA mining
+* CPU mining
 * realistic benchmarking against arbitrary epoch/DAG/blocknumber
 * on-GPU DAG generation (no more DAG files on disk)
 * stratum mining without proxy
 * OpenCL devices picking
-* farm failover (getwork + stratum)
 
 
 ## Table of Contents
 
 * [Install](#install)
 * [Usage](#usage)
-    * [Examples connecting to pools](#examples-connecting-to-pools)
+    * [Examples connecting to pools](#examples-of-connections)
+    * [Benchmarking](#benchmarking)
 * [Build](#build)
-    * [Continuous Integration and development builds](#continuous-integration-and-development-builds)
-    * [Building from source](#building-from-source)
-* [Maintainers & Authors](#maintainers--authors)
-* [Contribute](#contribute)
+    * [Ubuntu / OSX](#ubuntu--osx )
+    * [Windows](#windows)
 * [F.A.Q.](#faq)
+* [Maintainers & Authors](#maintainers--authors)
 
 
 ## Install
 
-[Releases][Releases]
-
 Standalone **executables** for *Linux*, *macOS* and *Windows* are provided in
 the [Releases] section.
 Download an archive for your operating system and unpack the content to a place
-accessible from command line. The evrprogpowminer is ready to go.
-
-| Builds | Release |
-| ------ | ------- |
-| Last   | [GitHub release](https://github.com/evrprogpoworg/evrprogpowminer/releases) 
-
+accessible from command line. The kawpowminer is ready to go.
 
 If you have trouble with missing .dll or CUDA errors, [please install the latest version of CUDA drivers](https://developer.nvidia.com/cuda-downloads) or report to project maintainers.
 
 ## Usage
 
-The **evrprogpowminer** is a command line program. This means you launch it either
+The **kawpowminer** is a command line program. This means you launch it either
 from a Windows command prompt or Linux console, or create shortcuts to
 predefined command lines using a Linux Bash script or Windows batch/cmd file.
 For a full list of available command, please run:
 
-```sh
-evrprogpowminer --help
+`kawpowminer --help` Or for specific info about a module `kawpowminer -H <moduleName>`
+
+(has to be before the `-P` flag)
+`kawpowminer -U -P ...` = Forced CUDA
+`kawpowminer -G -P ...` = Forced OpenCL
+`kawpowminer --cpu -P ...` = Forced CPU
+
+### Examples of connections
+
+A typical use of kawpowminer with a pool might look like:
+
+```
+kawpowminer -P stratum+tcp://n2QdGzZai5qPfUDuF747kr9juhRZPZEhEz.worker@trvn.evrpool.com:2222
 ```
 
-### Examples connecting to pools
+With a local stratum solo-mining proxy:
 
-Connecting to [MinerMore Testnet](https://minermore.com):
+```
+kawpowminer -P stratum+tcp://n2QdGzZai5qPfUDuF747kr9juhRZPZEhEz.worker@127.0.0.1:2345
+```
 
-`./evrprogpowminer -P stratum+tcp://<wallet>.worker@rvnt.minermore.com:4505` or
+To solo mine direct to ravend/raven-qt (specify miningaddress="youraddress" in raven.conf):
 
-`evrprogpowminer.exe -P stratum+tcp://<wallet>.worker@rvnt.minermore.com:4505`
+```
+kawpowminer -P http://mynodeusername:mynodepassword@127.0.0.1:8766
+``` 
+Dont forget to configure your node if you are solo mining direct to ravend or raven-qt. Before launching kawpowminer, make sure that:
+
+* the node is fully syncd.
+* the node is listening on the RPC port. (8766 for mainnet or 18766 for testnet)
+* the node has `server=1` set in the raven.conf file.
+* the node has `miningaddress="youraddress"` set in the raven.conf file.
+* the node has `rpcuser=yourUser` and `rpcpassword=yourPass` set in the raven.conf file.
+* optionally the node has `testnet=1` set in the raven.conf file.
+
+
+For CPU mining run the miner with the `--cpu` before the `-P` flag like so (works for pool, proxy and direct to node):
+
+```
+kawpowminer --cpu -P http://mynodeusername:mynodepassword@127.0.0.1:18766
+``` 
+When running the `--cpu` flag the miner will disable gpu mining.
+
+### Benchmarking
+
+```
+kawpowminer -M <Block Height>
+```
+
 
 ## Build
 
-After cloning this repository into `evrprogpowminer`, it can be built with commands like:
+After cloning this repository into `kawpowminer`, it can be built with commands like:
 
 ### Ubuntu / OSX
 ```
-cd evrprogpowminer
+cd kawpowminer
 git submodule update --init --recursive
 mkdir build
 cd build
-cmake .. -DETHASHCUDA=ON -DETHASHCL=ON -DAPICORE=ON
+cmake .. -DETHASHCUDA=ON -DETHASHCL=ON -DETHASHCPU=ON -DAPICORE=ON
 make -sj $(nproc)
 ```
 
@@ -129,11 +128,11 @@ Open "Developer Command Prompt for VS 2019"
 1. Open StartMenu and search for "Developer Command Prompt for VS 2019"
 2. Follow these steps:
 ```
-cd C:\Users\USER_NAME\PATH_TO_EVRPROGPOWMINER\evrprogpowminer
+cd C:\Users\USER_NAME\PATH_TO_KAWPOWMINER\kawpowminer
 git submodule update --init --recursive
 mkdir build
 cd build
-cmake -G "Visual Studio 16 2019" -A X64 -H. -Bbuild -DETHASHCL=ON -DETHASHCUDA=ON -DAPICORE=ON ..
+cmake -G "Visual Studio 16 2019" -A X64 -H. -Bbuild -DETHASHCL=ON -DETHASHCUDA=ON -DETHASHCPU=ON -DAPICORE=ON ..
 cd build
 cmake --build . --config Release
 ```
@@ -144,6 +143,8 @@ cmake --build . --config Release
    2. Open CMakeLists.txt file with File->Open->CMake
    3. Wait for intelligence to build the cache (this can take some time)
    4. Build the project (CTRL+SHIFT+B) or find the build command in the menu
+
+=================
 
 ProgPoW can be tuned using the following parameters.  The proposed settings have been tuned for a range of existing, commodity GPUs:
 
@@ -156,7 +157,7 @@ ProgPoW can be tuned using the following parameters.  The proposed settings have
 * `PROGPOW_CNT_CACHE`: The number of cache accesses per loop
 * `PROGPOW_CNT_MATH`: The number of math operations per loop
 
-The value of these parameters has been tweaked to use 0.9.4 specs with a PROGPOW_PEROD of 3 to fit Evrmore's blocktimes.  See [this medium post](https://medium.com/@ifdefelse/progpow-progress-da5bb31a651b) for details.
+The value of these parameters has been tweaked to use 0.9.4 specs with a PROGPOW_PEROD of 3 to fit Raven's blocktimes.  See [this medium post](https://medium.com/@ifdefelse/progpow-progress-da5bb31a651b) for details.
 
 | Parameter             | 0.9.2 | 0.9.3 | 0.9.4 |
 |-----------------------|-------|-------|--------|
@@ -169,13 +170,28 @@ The value of these parameters has been tweaked to use 0.9.4 specs with a PROGPOW
 | `PROGPOW_CNT_CACHE`   | `12`  | `11`  | `11`  |
 | `PROGPOW_CNT_MATH`    | `20`  | `18`  | `18`  |
 
-Epoch length = 12000 blocks
+Epoch length = 7500 blocks
+
+## License
+
+Licensed under the [GNU General Public License, Version 3](LICENSE).
+
+
+## F.A.Q
+
+### Can I still mine Raven with my 4GB GPU?
+
+Not really, your VRAM must be above the DAG size (Currently about 4 GB.) to get best performance. Without it severe hash loss will occur.
+
+### Can I CPU Mine?
+
+
 
 ## Maintainers & Authors
 
 [![Discord](https://img.shields.io/badge/discord-join%20chat-blue.svg)](https://discord.gg/uvyuqWm)
 
-The list of current and past maintainers, authors and contributors to the evrprogpowminer project.
+The list of current and past maintainers, authors and contributors to the kawpowminer project.
 Ordered alphabetically. [Contributors statistics since 2015-08-20].
 
 | Name                  | Contact                                                      |     |
@@ -196,87 +212,7 @@ Ordered alphabetically. [Contributors statistics since 2015-08-20].
 | Ikmyeong Na           | [@naikmyeong](https://github.com/naikmyeong)                 |     |
 
 
-## Contribute
-
-All bug reports, pull requests and code reviews are very much welcome.
-
-
-## License
-
-Licensed under the [GNU General Public License, Version 3](LICENSE).
-
-
-## F.A.Q
-
-### Why is my hashrate with Nvidia cards on Windows 10 so low?
-
-The new WDDM 2.x driver on Windows 10 uses a different way of addressing the GPU. This is good for a lot of things, but not for ETH mining.
-
-* For Kepler GPUs: I actually don't know. Please let me know what works best for good old Kepler.
-* For Maxwell 1 GPUs: Unfortunately the issue is a bit more serious on the GTX750Ti, already causing suboptimal performance on Win7 and Linux. Apparently about 4MH/s can still be reached on Linux, which, depending on ETH price, could still be profitable, considering the relatively low power draw.
-* For Maxwell 2 GPUs: There is a way of mining ETH at Win7/8/Linux speeds on Win10, by downgrading the GPU driver to a Win7 one (350.12 recommended) and using a build that was created using CUDA 6.5.
-* For Pascal GPUs: You have to use the latest WDDM 2.1 compatible drivers in combination with Windows 10 Anniversary edition in order to get the full potential of your Pascal GPU.
-
-### Why is a GTX 1080 slower than a GTX 1070?
-
-Because of the GDDR5X memory, which can't be fully utilized for Evrmore mining (yet).
-
-### Are AMD cards also affected by slowdowns with increasing DAG size?
-
-Only GCN 1.0 GPUs (78x0, 79x0, 270, 280), but in a different way. You'll see that on each new epoch (30K blocks), the hashrate will go down a little bit.
-
-### Can I still mine Evrmore with my 2GB GPU?
-
-Not really, your VRAM must be above the DAG size (Currently about 3 GB.) to get best performance. Without it severe hash loss will occur.
-
-### What are the optimal launch parameters?
-
-The default parameters are fine in most scenario's (CUDA). For OpenCL it varies a bit more. Just play around with the numbers and use powers of 2. GPU's like powers of 2.
-
-### What does the `--cuda-parallel-hash` flag do?
-
-[@davilizh](https://github.com/davilizh) made improvements to the CUDA kernel hashing process and added this flag to allow changing the number of tasks it runs in parallel. These improvements were optimised for GTX 1060 GPUs which saw a large increase in hashrate, GTX 1070 and GTX 1080/Ti GPUs saw some, but less, improvement. The default value is 4 (which does not need to be set with the flag) and in most cases this will provide the best performance.
-
-### What is evrprogpowminer's relationship with [Genoil's fork]?
-
-[Genoil's fork] was the original source of this version, but as Genoil is no longer consistently maintaining that fork it became almost impossible for developers to get new code merged there. In the interests of progressing development without waiting for reviews this fork should be considered the active one and Genoil's as legacy code.
-
-### Can I CPU Mine?
-
-No.
-
-### CUDA GPU order changes sometimes. What can I do?
-
-There is an environment var `CUDA_DEVICE_ORDER` which tells the Nvidia CUDA driver how to enumerates the graphic cards.
-The following values are valid:
-
-* `FASTEST_FIRST` (Default) - causes CUDA to guess which device is fastest using a simple heuristic.
-* `PCI_BUS_ID` - orders devices by PCI bus ID in ascending order.
-
-To prevent some unwanted changes in the order of your CUDA devices you **might set the environment variable to `PCI_BUS_ID`**.
-This can be done with one of the 2 ways:
-
-* Linux:
-    * Adapt the `/etc/environment` file and add a line `CUDA_DEVICE_ORDER=PCI_BUS_ID`
-    * Adapt your start script launching evrprogpowminer and add a line `export CUDA_DEVICE_ORDER=PCI_BUS_ID`
-
-* Windows:
-    * Adapt your environment using the control panel (just search `setting environment windows control panel` using your favorite search engine)
-    * Adapt your start (.bat) file launching evrprogpowminer and add a line `set CUDA_DEVICE_ORDER=PCI_BUS_ID` or `setx CUDA_DEVICE_ORDER PCI_BUS_ID`. For more info about `set` see [here](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/set_1), for more info about `setx` see [here](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/setx)
-
-### nvrtc64_102_0.dll not found...
-
-```text
-Error: The code execution cannot be processed because nvrtc64_102_0.dll was not found.
-or
-error while loading shared libraries: libnvrtc.so.10.2: cannot open shared object file: No such file or directory
-```
-
-You have to upgrade your Nvidia drivers. Install cuda 10.2.
-
-
-[Amazon S3 is needed]: https://docs.travis-ci.com/user/uploading-artifacts/
 [cpp-ethereum]: https://github.com/ethereum/cpp-ethereum
-[Contributors statistics since 2015-08-20]: https://github.com/evrprogpoworg/evrprogpowminer/graphs/contributors?from=2015-08-20
+[Contributors statistics since 2015-08-20]: https://github.com/kawpoworg/kawpowminer/graphs/contributors?from=2015-08-20
 [Genoil's fork]: https://github.com/Genoil/cpp-ethereum
-[Releases]: https://github.com/evrprogpoworg/evrprogpowminer/releases
+[Releases]: https://github.com/kawpoworg/kawpowminer/releases

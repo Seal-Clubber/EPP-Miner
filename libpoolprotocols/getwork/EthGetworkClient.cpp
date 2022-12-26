@@ -586,7 +586,7 @@ void EthGetworkClient::submitSolution(const Solution& solution)
         m_solution_submitted_max_id = max(m_solution_submitted_max_id, id);
         jReq["method"] = "pprpcsb";
         jReq["params"] = Json::Value(Json::arrayValue);
-        jReq["params"].append(solution.work.header.hex());  // Don't prepend 0x (evrprogpow has a dictionary of hashes)
+        jReq["params"].append(solution.work.header.hex());  // Don't prepend 0x (kawpow has a dictionary of hashes)
         jReq["params"].append(solution.mixHash.hex());
         jReq["params"].append(nonceHex);
         send(jReq);

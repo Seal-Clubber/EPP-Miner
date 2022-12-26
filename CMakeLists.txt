@@ -20,13 +20,13 @@ HunterGate(
 )
 
 
-project(evrprogpowminer)
+project(kawpowminer)
 set(PROJECT_VERSION 1.3.0)
 
 
 option(ETHASHCL "Build with OpenCL mining" ON)
 option(ETHASHCUDA "Build with CUDA mining" ON)
-option(ETHASHCPU "Build with CPU mining (only for development)" OFF)
+option(ETHASHCPU "Build with CPU mining" ON)
 option(ETHDBUS "Build with D-Bus support" OFF)
 option(APICORE "Build with API Server support" ON)
 option(DEVBUILD "Log developer metrics" OFF)
@@ -69,7 +69,7 @@ message("-- Build ${CMAKE_BUILD_TYPE} / ${CMAKE_SYSTEM_NAME}")
 message("----------------------------------------------------------------- components")
 message("-- ETHASHCL         Build OpenCL components                      ${ETHASHCL}")
 message("-- ETHASHCUDA       Build CUDA components                        ${ETHASHCUDA}")
-message("-- ETHASHCPU        Build CPU components (only for development)  ${ETHASHCPU}")
+message("-- ETHASHCPU        Build CPU components                         ${ETHASHCPU}")
 message("-- ETHDBUS          Build D-Bus components                       ${ETHDBUS}")
 message("-- APICORE          Build API Server components                  ${APICORE}")
 message("-- DEVBUILD         Build with dev logging                       ${DEVBUILD}")
@@ -103,7 +103,7 @@ if (APICORE)
 	add_subdirectory(libapicore)
 endif()
 
-add_subdirectory(evrprogpowminer)
+add_subdirectory(kawpowminer)
 
 
 if(WIN32)
