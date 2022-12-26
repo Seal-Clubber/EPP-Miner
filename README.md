@@ -2,7 +2,7 @@
 
 Kawpowminer is a derivative of Ethash enhanced with [Programmable Proof of Work](https://github.com/ifdefelse/progpow) for ASIC and FPGA resistance.
 
-> kawpowpow miner with OpenCL, CUDA, CPU and stratum support
+> kawpominer with OpenCL, CUDA, CPU and stratum support
 
 AMD GPU cards are not currently properly supported.
 
