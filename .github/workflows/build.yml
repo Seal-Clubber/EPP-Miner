@@ -1,0 +1,81 @@
+name: Build EPP-Miner Linux/HiveOS
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_version:
+        description: 'Tag version for the release (e.g., v1.0.0)'
+        required: true
+      branch:
+        description: 'Branch to release from (e.g., main, develop)'
+        default: 'main'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up CUDA and dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential cmake mesa-common-dev git wget
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.1-1_all.deb
+          sudo dpkg -i cuda-keyring_1.1-1_all.deb
+          sudo apt update
+          sudo apt install -y cuda-toolkit-12-6
+
+      - name: Initialize and update submodules
+        run: git submodule update --init --recursive
+
+      - name: Create output directory
+        run: mkdir -p "$GITHUB_WORKSPACE/output"
+
+      - name: Build NVIDIA version
+        run: |
+          mkdir -p build-nvidia && cd build-nvidia
+          cmake .. -DETHASHCUDA=ON -DETHASHCL=OFF
+          cmake --build .
+          mkdir -p "$GITHUB_WORKSPACE/output/EPP-Miner-nvidia"
+          cp evrprogpowminer/evrprogpowminer "$GITHUB_WORKSPACE/output/EPP-Miner-nvidia/EPP-Miner-nvidia"
+
+      - name: Package NVIDIA version
+        run: |
+          cp hiveos_packager_nvidia/* "$GITHUB_WORKSPACE/output/EPP-Miner-nvidia/"
+          chmod -R a+rwx "$GITHUB_WORKSPACE/output/EPP-Miner-nvidia"
+          tar -zcvf "$GITHUB_WORKSPACE/output/EPP-Miner-nvidia.tar.gz" -C "$GITHUB_WORKSPACE/output" EPP-Miner-nvidia
+
+      - name: Build AMD version
+        run: |
+          mkdir -p build-amd && cd build-amd
+          cmake .. -DETHASHCUDA=OFF -DETHASHCL=ON
+          cmake --build .
+          mkdir -p "$GITHUB_WORKSPACE/output/EPP-Miner-amd"
+          cp evrprogpowminer/evrprogpowminer "$GITHUB_WORKSPACE/output/EPP-Miner-amd/EPP-Miner-amd"
+
+      - name: Package AMD version
+        run: |
+          cp hiveos_packager_amd/* "$GITHUB_WORKSPACE/output/EPP-Miner-amd/"
+          chmod -R a+rwx "$GITHUB_WORKSPACE/output/EPP-Miner-amd"
+          tar -zcvf "$GITHUB_WORKSPACE/output/EPP-Miner-amd.tar.gz" -C "$GITHUB_WORKSPACE/output" EPP-Miner-amd
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag_version }}
+          name: "Release ${{ github.event.inputs.tag_version }}"
+          draft: false
+          prerelease: false
+          files: |
+            output/EPP-Miner-nvidia.tar.gz
+            output/EPP-Miner-amd.tar.gz
+            output/EPP-Miner-nvidia/EPP-Miner-nvidia
+            output/EPP-Miner-amd/EPP-Miner-amd
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Finish
+        run: echo "All tasks completed successfully!"
